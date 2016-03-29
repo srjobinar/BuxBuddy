@@ -18,6 +18,12 @@ public class Event {
 		this.userPhone = userPhone;
 		this.password = password;
 	}
+	public Event(int userId,String userName,String userPhone) {
+
+		this.userId = userId;
+		this.userName = userName;
+		this.userPhone = userPhone;
+	}
 	
 
 
