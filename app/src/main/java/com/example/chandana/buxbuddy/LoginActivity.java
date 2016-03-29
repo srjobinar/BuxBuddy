@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +44,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -60,18 +66,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mNameView;
     private View mProgressView;
     private View mLoginFormView;
+    private EventDB db;
+    private String dbpath;
+    private int flag=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+
+        if(!checkDB()){
+            copyDataBase();
+        }
+
+
+        db = new EventDB(this);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mNameView = (EditText) findViewById(R.id.name);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -95,55 +112,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
+
+
+    private boolean checkDB(){
+        File fil=this.getDatabasePath("tathva.db");
+        dbpath=fil.getPath();
+        Log.i("check",dbpath);
+        File db=new File(dbpath);
+
+        if(!db.exists()){
+            Log.i("check",dbpath);
+            File db_dir=db.getParentFile();
+            db_dir.mkdirs();
         }
 
-        getLoaderManager().initLoader(0, null, this);
+        return db.exists();
     }
 
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
+    private void copyDataBase(){
+        try{
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
+            InputStream myInput = this.getAssets().open("tathva.db");
+            String outFileName = dbpath;
+            OutputStream myOutput = new FileOutputStream(outFileName);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = myInput.read(buffer))>0){
+                myOutput.write(buffer, 0, length);
             }
+
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
         }
+        catch(Exception e){
+            //db can't b copied - abort!
+            Log.d("error", e.getMessage());
+        }
+
     }
-
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
@@ -152,10 +159,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mNameView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String phone = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String username = mNameView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -168,12 +177,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(phone)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+        } else if (!isEmailValid(phone)) {
+            mEmailView.setError(getString(R.string.error_invalid_phone));
             focusView = mEmailView;
             cancel = true;
         }
@@ -186,14 +195,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(phone, password, username);
             mAuthTask.execute((Void) null);
         }
     }
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -297,12 +306,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mPhone;
         private final String mPassword;
+        private final String mName;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String phone, String password, String username) {
+            mPhone = phone;
             mPassword = password;
+            mName = username;
         }
 
         @Override
@@ -316,15 +327,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
+            //String s = db.getLocalUpdate("ABS");//
+            Event e = db.getUserByPhone(mPhone);
+            if(e!=null){
+                flag=1;
+                return e.password.equals(mPassword);
+            }
+            else{
+              if(mName.equals("")){
+                  flag=2;
+                  return false;
+              }
+                else{
+                  db.createuser(mName,mPhone,mPassword);
+              }
+            }
+
+
+           /* for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+                if (pieces[0].equals(mPhone)) {
                     // Account exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
-            }
+            }*/
 
             // TODO: register the new account here.
+
+
             return true;
         }
 
@@ -338,8 +368,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(i);
                 setContentView(R.layout.activity_group);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                if(flag==1) {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
+                else{
+                    mNameView.setError(getString(R.string.error_field_required));
+                    mNameView.requestFocus();
+                }
             }
         }
 
