@@ -8,6 +8,7 @@
     <string name="prompt_Name">Username (For New Users)</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="prompt_Group_Name">Enter Group Name</string>
+    <string name="prompt_Amount">Enter Amount</string>
     <string name="action_sign_in">Sign up</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_phone">This number is invalid</string>
@@ -18,4 +19,5 @@
         completions."
     </string>
     <string name="title_activity_create_group">CreateGroup</string>
+    <string name="title_activity_add_transaction">add_transaction</string>
 </resources>

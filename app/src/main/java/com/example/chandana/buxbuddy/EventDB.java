@@ -39,6 +39,8 @@ public class EventDB extends SQLiteOpenHelper {
 	}
 
 
+
+
 	//Read more: http://mrbool.com/how-to-insert-data-into-a-sqlite-database-in-android/28895#ixzz44HicuuFo
 
 
