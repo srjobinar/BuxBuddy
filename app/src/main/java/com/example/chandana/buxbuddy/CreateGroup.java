@@ -34,14 +34,6 @@ public class CreateGroup extends AppCompatActivity {
         userlist = db.getUsersList();
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), add_transaction.class);
-                startActivity(i);
-            }
-        });
         ListView lv = (ListView) findViewById(R.id.listView2);
 
         listener = new EventListAdapter.OnSelectListener() {
@@ -65,7 +57,7 @@ public class CreateGroup extends AppCompatActivity {
             public void onClick(View v) {
               int grpid;
                grpid = (int) db.creategroup(grpname.getText().toString());
-
+               Log.i("check",grpid+"");
                 ListIterator<Event> iterator = list.listIterator();
                 while(iterator.hasNext()){
                     db.createusergroup(iterator.next().userId,grpid,0);

@@ -13,14 +13,28 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
 public class Dashboard extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView g;
-    String[] groups={"Workplace","Hangouts"};
+    ArrayList<String> groups=new ArrayList<String>();
+    EventsMenuDB db = new EventsMenuDB(this);
+    List<Event> list=new ArrayList<Event>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        list = db.getGroupsList();
+        ListIterator<Event> iterator = list.listIterator();
+        while(iterator.hasNext()){
+            groups.add(iterator.next().groupName);
+        }
+
 
         g = (ListView) findViewById(R.id.listView2);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,groups);
@@ -34,8 +48,8 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(getApplicationContext(), CreateGroup.class);
+                startActivity(i);
             }
         });
     }

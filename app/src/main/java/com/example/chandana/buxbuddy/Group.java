@@ -15,10 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Group extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView t;
-    String[] trans={"T1","T2","T3"};
+    ArrayList<String> groups=new ArrayList<String>();
+    EventsMenuDB db = new EventsMenuDB(this);
+    List<Event> list=new ArrayList<Event>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +46,7 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent i = new Intent(getApplicationContext(), CreateGroup.class);
+                Intent i = new Intent(getApplicationContext(), add_transaction.class);
                 startActivity(i);
             }
         });
@@ -73,5 +78,12 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "You chose "+ position,Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(getApplicationContext(), Dashboard.class);
+        startActivity(i);
     }
 }

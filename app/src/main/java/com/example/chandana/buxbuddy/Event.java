@@ -11,6 +11,9 @@ public class Event {
 	public String password;
 	public int groupId;
 	public String groupName;
+	public int transactionId;
+	public String transactionName;
+	public int amount;
 	/**/
 	
 	public Event(int userId,String userName,String userPhone,String password) {
@@ -31,6 +34,13 @@ public class Event {
 
 		this.groupId = groupId;
 		this.groupName = groupName;
+	}
+
+	public Event(int transactionId,String transactionName,int amount) {
+
+		this.transactionId = transactionId;
+		this.transactionName = transactionName;
+		this.amount = amount;
 	}
 	
 

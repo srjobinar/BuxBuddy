@@ -28,15 +28,19 @@
         </activity>
         <activity
             android:name=".Dashboard"
-            android:label="@string/title_activity_dashboard"/>
+            android:label="Dashboard"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
          <activity
             android:name=".CreateGroup"
             android:label="@string/title_activity_create_group"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+             />
         <activity
             android:name=".add_transaction"
             android:label="@string/title_activity_add_transaction"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
