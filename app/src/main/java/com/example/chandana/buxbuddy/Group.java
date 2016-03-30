@@ -17,27 +17,35 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Group extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    int x;
     ListView t;
-    ArrayList<String> groups=new ArrayList<String>();
+    ArrayList<String> trans=new ArrayList<String>();
     EventsMenuDB db = new EventsMenuDB(this);
     List<Event> list=new ArrayList<Event>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
+        Intent i=getIntent();
+        x=i.getIntExtra("gid", -1);
 
         t = (ListView) findViewById(R.id.listView);
+
+        list = db.getTransactionsList(x);
+        ListIterator<Event> iterator = list.listIterator();
+        while(iterator.hasNext()){
+            trans.add(iterator.next().transactionName);
+        }
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,trans);
         t.setAdapter(adapter);
         t.setOnItemClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Intent i=getIntent();
-        int x=i.getIntExtra("key", -1);
         Toast.makeText(this, "Group number "+x,Toast.LENGTH_SHORT).show();
 
        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -47,6 +55,7 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
                 Intent i = new Intent(getApplicationContext(), add_transaction.class);
+                i.putExtra("gid",x);
                 startActivity(i);
             }
         });

@@ -46,7 +46,7 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		
 		if(cursor.moveToFirst()){
 			do{
-				Event event=new Event(cursor.getColumnIndex("id"),cursor.getString(cursor.getColumnIndex("name")),
+				Event event=new Event(cursor.getInt(cursor.getColumnIndex("id")),cursor.getString(cursor.getColumnIndex("name")),
 								cursor.getString(cursor.getColumnIndex("phone")));
 				list.add(event);
 			}while(cursor.moveToNext());
@@ -56,16 +56,16 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		return list;
 		
 	}
-	public List<Event> getMembersList(){
+	public List<Event> getMembersList(int x){
 		List<Event> list=new ArrayList<Event>();
-		String query="SELECT id,name,phone FROM user";
+		String query="SELECT id,name,phone FROM user cross join userGroup where groupid="+x;
 		SQLiteDatabase db=this.getReadableDatabase();
 
 		Cursor cursor=db.rawQuery(query,null);
 
 		if(cursor.moveToFirst()){
 			do{
-				Event event=new Event(cursor.getColumnIndex("id"),cursor.getString(cursor.getColumnIndex("name")),
+				Event event=new Event(cursor.getInt(cursor.getColumnIndex("id")),cursor.getString(cursor.getColumnIndex("name")),
 						cursor.getString(cursor.getColumnIndex("phone")));
 				list.add(event);
 			}while(cursor.moveToNext());
@@ -85,7 +85,7 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 		if(cursor.moveToFirst()){
 			do{
-				Event event=new Event(cursor.getColumnIndex("id"),cursor.getString(cursor.getColumnIndex("name")));
+				Event event=new Event(cursor.getInt(cursor.getColumnIndex("id")),cursor.getString(cursor.getColumnIndex("name")));
 				list.add(event);
 			}while(cursor.moveToNext());
 		}
@@ -95,17 +95,17 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	}
 
-	public List<Event> getTransactionsList(){
+	public List<Event> getTransactionsList(int x){
 		List<Event> list=new ArrayList<Event>();
-		String query="SELECT id,name,amount FROM groups";
+		String query="SELECT id,name,amount FROM transactions where groupid="+x;
 		SQLiteDatabase db=this.getReadableDatabase();
 
 		Cursor cursor=db.rawQuery(query,null);
 
 		if(cursor.moveToFirst()){
 			do{
-				Event event=new Event(cursor.getColumnIndex("id"),cursor.getString(cursor.getColumnIndex("name")),
-								cursor.getColumnIndex("amount"));
+				Event event=new Event(cursor.getInt(cursor.getColumnIndex("id")),cursor.getString(cursor.getColumnIndex("name")),
+								cursor.getInt(cursor.getColumnIndex("amount")));
 				list.add(event);
 			}while(cursor.moveToNext());
 		}
@@ -124,13 +124,24 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		return v;
 	}
 
+	public long createtransaction(Integer amount,String transName,Integer grpid) {
+		SQLiteDatabase database = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("amount", amount);
+		values.put("groupid", grpid);
+		values.put("name", transName);
+		long v = database.insert("transactions", null, values);
+		database.close();
+		return v;
+	}
+
 	public long createusergroup(int userid,int groupid,int admin) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("userid", userid);
 		values.put("groupid", groupid);
 		values.put("admin", admin);
-		long v = database.insert("usergroup", null, values);
+		long v = database.insert("userGroup", null, values);
 		database.close();
 		return v;
 	}

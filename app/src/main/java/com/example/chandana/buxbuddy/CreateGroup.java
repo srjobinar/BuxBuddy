@@ -64,6 +64,7 @@ public class CreateGroup extends AppCompatActivity {
                 }
 
                 Intent i = new Intent(getApplicationContext(), Group.class);
+                i.putExtra("gid",grpid);
                 startActivity(i);
             }
         });

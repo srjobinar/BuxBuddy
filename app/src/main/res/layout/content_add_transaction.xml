@@ -16,27 +16,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText2"
+        android:hint="@string/prompt_Amount"
+        android:inputType="number"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="@string/prompt_Amount" />
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Confirm"
         android:id="@+id/button2"
-        android:layout_alignTop="@+id/editText2"
+        android:layout_below="@+id/editText2"
         android:layout_toRightOf="@+id/editText2"
-        android:layout_toEndOf="@+id/editText2"
-        android:layout_marginLeft="67dp"
-        android:layout_marginStart="67dp" />
+        android:layout_toEndOf="@+id/editText2" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listView3"
-        android:layout_below="@+id/button2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button2" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText3"
+        android:hint="@string/prompt_Transaction"
+        android:layout_above="@+id/button2"
+        android:layout_alignRight="@+id/listView3"
+        android:layout_alignEnd="@+id/listView3" />
 </RelativeLayout>

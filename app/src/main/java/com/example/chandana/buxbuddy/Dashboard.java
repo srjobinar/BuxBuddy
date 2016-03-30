@@ -21,8 +21,10 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
 
     ListView g;
     ArrayList<String> groups=new ArrayList<String>();
+    ArrayList<Integer> groupids=new ArrayList<Integer>();
     EventsMenuDB db = new EventsMenuDB(this);
     List<Event> list=new ArrayList<Event>();
+    Event e;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,9 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
         list = db.getGroupsList();
         ListIterator<Event> iterator = list.listIterator();
         while(iterator.hasNext()){
-            groups.add(iterator.next().groupName);
+            e = iterator.next();
+            groups.add(e.groupName);
+            groupids.add(e.groupId);
         }
 
 
@@ -57,7 +61,8 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getApplicationContext(), Group.class);
-        i.putExtra("key", position);
+        i.putExtra("gid",groupids.get(position));
+        Log.i("check",groupids.get(position)+"");
         startActivity(i);
         //Toast.makeText(this, position,Toast.LENGTH_SHORT).show();
     }

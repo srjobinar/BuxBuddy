@@ -1,5 +1,7 @@
 package com.example.chandana.buxbuddy;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,12 +9,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class add_transaction extends AppCompatActivity {
 
-    EventsMenuDB db=new EventsMenuDB(this);
+    EventsMenuDB db = new EventsMenuDB(this);
     EventListAdapter.OnSelectListener listener;
+    List<Event> list = new ArrayList<Event>();
+    List<Event> userlist = new ArrayList<Event>();
+    EditText amount,trans_name;
+    int x;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    //private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +42,97 @@ public class add_transaction extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        Intent i = getIntent();
+        x = i.getIntExtra("gid", -1);
+        Log.i("check",x+"");
+        userlist = db.getMembersList(x);
         ListView lv = (ListView) findViewById(R.id.listView3);
         listener = new EventListAdapter.OnSelectListener() {
             @Override
             public void onSelect(int position, boolean checked) {
-                Log.i("Check", position + " ");
+                if (checked)
+                    list.add(userlist.get(position));
+                else
+                    list.remove(userlist.get(position));
             }
         };
-        EventListAdapter exhibitionAdapter = new EventListAdapter(this, R.layout.events_list_item,db.getGroupsList(),listener);
+        EventListAdapter exhibitionAdapter = new EventListAdapter(this, R.layout.events_list_item,userlist, listener);
         lv.setAdapter(exhibitionAdapter);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        Button btn = (Button) findViewById(R.id.button2);
+        amount = (EditText) findViewById(R.id.editText2);
+        trans_name = (EditText) findViewById(R.id.editText3);
+        btn.setOnClickListener(new View.OnClickListener()
+
+                               {
+                                   @Override
+                                   public void onClick (View v){
+                                       int transid;
+                                       transid = (int) db.createtransaction(Integer.parseInt(amount.getText().toString())
+                                                            ,trans_name.getText().toString(),x);
+                                       Log.i("check", transid + "");
+                                       Log.i("amount",Integer.parseInt(amount.getText().toString())+"");
+                                       Log.i("trans",trans_name.getText().toString());
+                                      /* ListIterator<Event> iterator = list.listIterator();
+                                       while (iterator.hasNext()) {
+                                           db.createusergroup(iterator.next().userId, grpid, 0);
+                                       }*/
+
+                                       Intent i = new Intent(getApplicationContext(), Group.class);
+                                       i.putExtra("gid",x);
+                                       startActivity(i);
+                                   }
+                               }
+
+        );
     }
+
+
+
+
+   /* @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "add_transaction Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.chandana.buxbuddy/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "add_transaction Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.chandana.buxbuddy/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+*/
+
 
 }
