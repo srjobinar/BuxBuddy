@@ -21,7 +21,7 @@ import java.util.ListIterator;
 
 public class Group extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    int x;
+    int gid,uid;
     ListView t;
     ArrayList<String> trans=new ArrayList<String>();
     EventsMenuDB db = new EventsMenuDB(this);
@@ -31,11 +31,12 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         Intent i=getIntent();
-        x=i.getIntExtra("gid", -1);
+        gid=i.getIntExtra("gid", -1);
+        uid=i.getIntExtra("uid",-1);
 
         t = (ListView) findViewById(R.id.listView);
 
-        list = db.getTransactionsList(x);
+        list = db.getTransactionsList(gid);
         ListIterator<Event> iterator = list.listIterator();
         while(iterator.hasNext()){
             trans.add(iterator.next().transactionName);
@@ -46,7 +47,7 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Toast.makeText(this, "Group number "+x,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Group number "+gid,Toast.LENGTH_SHORT).show();
 
        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +56,8 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
                 Intent i = new Intent(getApplicationContext(), add_transaction.class);
-                i.putExtra("gid",x);
+                i.putExtra("gid",gid);
+                i.putExtra("uid",uid);
                 startActivity(i);
             }
         });
@@ -93,6 +95,7 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
     public void onBackPressed() {
         super.onBackPressed();
         Intent i = new Intent(getApplicationContext(), Dashboard.class);
+        i.putExtra("uid",uid);
         startActivity(i);
     }
 }

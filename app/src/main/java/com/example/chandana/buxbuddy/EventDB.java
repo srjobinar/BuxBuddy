@@ -28,14 +28,15 @@ public class EventDB extends SQLiteOpenHelper {
 
 	}
 
-	public void createuser(String name,String phone,String password) {
+	public long createuser(String name,String phone,String password) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("name", name);
 		values.put("phone", phone);
 		values.put("password", password);
-		database.insert("user", null, values);
+		long v = database.insert("user", null, values);
 		database.close();
+		return v;
 	}
 
 
@@ -57,7 +58,7 @@ public class EventDB extends SQLiteOpenHelper {
 //				cursor.getString(14),cursor.getString(15)
 //				);
 		if(cursor.getCount()==0){return null;};
-		Event event = new Event(cursor.getColumnIndex("id"),cursor.getString(cursor.getColumnIndex("name")),
+		Event event = new Event(cursor.getInt(cursor.getColumnIndex("id")),cursor.getString(cursor.getColumnIndex("name")),
 						phone,cursor.getString(cursor.getColumnIndex("password")));
 		cursor.close();
 		db.close();

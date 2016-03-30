@@ -56,9 +56,9 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		return list;
 		
 	}
-	public List<Event> getMembersList(int x){
+	public List<Event> getMembersList(int gid,int uid){
 		List<Event> list=new ArrayList<Event>();
-		String query="SELECT id,name,phone FROM user cross join userGroup where groupid="+x;
+		String query="SELECT id,name,phone FROM user inner join userGroup on user.id=userGroup.userid where groupid="+gid+" and userid!="+uid;
 		SQLiteDatabase db=this.getReadableDatabase();
 
 		Cursor cursor=db.rawQuery(query,null);
@@ -76,9 +76,9 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	}
 
-	public List<Event> getGroupsList(){
+	public List<Event> getGroupsList(Integer x){
 		List<Event> list=new ArrayList<Event>();
-		String query="SELECT id,name FROM groups";
+		String query="SELECT id,name FROM groups inner join userGroup on groups.id=userGroup.groupid where userid="+x;
 		SQLiteDatabase db=this.getReadableDatabase();
 
 		Cursor cursor=db.rawQuery(query,null);
@@ -145,6 +145,18 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		database.close();
 		return v;
 	}
+
+	public long createusertransaction(int userid,int transactionid,int amount) {
+		SQLiteDatabase database = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("userid", userid);
+		values.put("transactionid", transactionid);
+		values.put("amount", amount);
+		long v = database.insert("userGroup", null, values);
+		database.close();
+		return v;
+	}
+
 	
 	public List<String> getCompList(String branch){
 		List<String> list=new ArrayList<String>();

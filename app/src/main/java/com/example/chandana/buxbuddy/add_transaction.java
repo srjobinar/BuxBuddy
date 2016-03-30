@@ -28,7 +28,7 @@ public class add_transaction extends AppCompatActivity {
     List<Event> list = new ArrayList<Event>();
     List<Event> userlist = new ArrayList<Event>();
     EditText amount,trans_name;
-    int x;
+    int gid,uid,amnt_per_user;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -43,9 +43,10 @@ public class add_transaction extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent i = getIntent();
-        x = i.getIntExtra("gid", -1);
-        Log.i("check",x+"");
-        userlist = db.getMembersList(x);
+        gid = i.getIntExtra("gid", -1);
+        uid = i.getIntExtra("uid",-1);
+        Log.i("check",gid+"");
+        userlist = db.getMembersList(gid,uid);
         ListView lv = (ListView) findViewById(R.id.listView3);
         listener = new EventListAdapter.OnSelectListener() {
             @Override
@@ -65,6 +66,7 @@ public class add_transaction extends AppCompatActivity {
         Button btn = (Button) findViewById(R.id.button2);
         amount = (EditText) findViewById(R.id.editText2);
         trans_name = (EditText) findViewById(R.id.editText3);
+        amnt_per_user = Integer.parseInt(amount.getText().toString())/(list.size()+1);
         btn.setOnClickListener(new View.OnClickListener()
 
                                {
@@ -72,17 +74,19 @@ public class add_transaction extends AppCompatActivity {
                                    public void onClick (View v){
                                        int transid;
                                        transid = (int) db.createtransaction(Integer.parseInt(amount.getText().toString())
-                                                            ,trans_name.getText().toString(),x);
+                                                            ,trans_name.getText().toString(),gid);
                                        Log.i("check", transid + "");
                                        Log.i("amount",Integer.parseInt(amount.getText().toString())+"");
                                        Log.i("trans",trans_name.getText().toString());
-                                      /* ListIterator<Event> iterator = list.listIterator();
+                                       ListIterator<Event> iterator = list.listIterator();
                                        while (iterator.hasNext()) {
-                                           db.createusergroup(iterator.next().userId, grpid, 0);
-                                       }*/
+                                           db.createusertransaction(iterator.next().userId, transid, -1 * amnt_per_user);
+                                       }
+                                       db.createusertransaction(uid, transid, list.size()*amnt_per_user);
 
                                        Intent i = new Intent(getApplicationContext(), Group.class);
-                                       i.putExtra("gid",x);
+                                       i.putExtra("gid",gid);
+                                       i.putExtra("uid",uid);
                                        startActivity(i);
                                    }
                                }

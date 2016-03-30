@@ -25,13 +25,17 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
     EventsMenuDB db = new EventsMenuDB(this);
     List<Event> list=new ArrayList<Event>();
     Event e;
+    int uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        list = db.getGroupsList();
+        Intent i=getIntent();
+        uid=i.getIntExtra("uid", -1);
+
+        list = db.getGroupsList(uid);
         ListIterator<Event> iterator = list.listIterator();
         while(iterator.hasNext()){
             e = iterator.next();
@@ -62,6 +66,7 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getApplicationContext(), Group.class);
         i.putExtra("gid",groupids.get(position));
+        i.putExtra("uid",uid);
         Log.i("check",groupids.get(position)+"");
         startActivity(i);
         //Toast.makeText(this, position,Toast.LENGTH_SHORT).show();

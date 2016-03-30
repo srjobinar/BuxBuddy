@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private EventDB db;
+    private Integer userid;
     private String dbpath;
     private int flag=0;
 
@@ -333,6 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Event e = db.getUserByPhone(mPhone);
             if(e!=null){
                 flag=1;
+                userid = e.userId;
                 return e.password.equals(mPassword);
             }
             else{
@@ -341,7 +343,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                   return false;
               }
                 else{
-                  db.createuser(mName,mPhone,mPassword);
+                  userid = (int) db.createuser(mName,mPhone,mPassword);
               }
             }
 
@@ -367,6 +369,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent i = new Intent(getApplicationContext(), Dashboard.class);
+                i.putExtra("uid",userid);
                 startActivity(i);
                 setContentView(R.layout.activity_dashboard);
             } else {
