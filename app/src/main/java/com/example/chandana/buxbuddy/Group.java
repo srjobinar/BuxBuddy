@@ -1,22 +1,39 @@
 package com.example.chandana.buxbuddy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
-public class Group extends AppCompatActivity {
+public class Group extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    ListView t;
+    String[] trans={"T1","T2","T3"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
+
+        t = (ListView) findViewById(R.id.listView);
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,trans);
+        t.setAdapter(adapter);
+        t.setOnItemClickListener(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent i=getIntent();
+        int x=i.getIntExtra("key", -1);
+        Toast.makeText(this, "Group number "+x,Toast.LENGTH_SHORT).show();
 
        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,5 +65,11 @@ public class Group extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, "You chose "+ position,Toast.LENGTH_SHORT).show();
+
     }
 }
