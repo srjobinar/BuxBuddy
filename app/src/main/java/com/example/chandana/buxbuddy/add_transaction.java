@@ -64,19 +64,21 @@ public class add_transaction extends AppCompatActivity {
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         Button btn = (Button) findViewById(R.id.button2);
-        amount = (EditText) findViewById(R.id.editText2);
-        trans_name = (EditText) findViewById(R.id.editText3);
-        amnt_per_user = Integer.parseInt(amount.getText().toString())/(list.size()+1);
+
         btn.setOnClickListener(new View.OnClickListener()
 
                                {
                                    @Override
                                    public void onClick (View v){
+                                       amount = (EditText) findViewById(R.id.editText2);
+                                       trans_name = (EditText) findViewById(R.id.editText3);
+                                       amnt_per_user = (Integer.parseInt(amount.getText().toString())/(list.size()+1));
                                        int transid;
                                        transid = (int) db.createtransaction(Integer.parseInt(amount.getText().toString())
                                                             ,trans_name.getText().toString(),gid);
                                        Log.i("check", transid + "");
-                                       Log.i("amount",Integer.parseInt(amount.getText().toString())+"");
+                                       Log.i("amount",amount.getText().toString());
+                                       Log.i("amount_per_user",amnt_per_user+"");
                                        Log.i("trans",trans_name.getText().toString());
                                        ListIterator<Event> iterator = list.listIterator();
                                        while (iterator.hasNext()) {

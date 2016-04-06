@@ -23,7 +23,7 @@ public class CreateGroup extends AppCompatActivity {
     List<Event> list=new ArrayList<Event>();
     List<Event> userlist=new ArrayList<Event>();
     EditText grpname;
-
+    int uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,9 @@ public class CreateGroup extends AppCompatActivity {
         setContentView(R.layout.activity_create_group);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        userlist = db.getUsersList();
+        Intent i=getIntent();
+        uid=i.getIntExtra("uid",-1);
+        userlist = db.getUsersList(uid);
 
 
         ListView lv = (ListView) findViewById(R.id.listView2);
@@ -62,9 +64,11 @@ public class CreateGroup extends AppCompatActivity {
                 while(iterator.hasNext()){
                     db.createusergroup(iterator.next().userId,grpid,0);
                 }
+                    db.createusergroup(iterator.next().userId,grpid,0);
 
                 Intent i = new Intent(getApplicationContext(), Group.class);
                 i.putExtra("gid",grpid);
+                i.putExtra("uid",uid);
                 startActivity(i);
             }
         });

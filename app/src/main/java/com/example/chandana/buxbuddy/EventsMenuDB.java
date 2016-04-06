@@ -37,9 +37,9 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	}
 	
-	public List<Event> getUsersList(){
+	public List<Event> getUsersList(Integer uid){
 		List<Event> list=new ArrayList<Event>();
-		String query="SELECT id,name,phone FROM user";
+		String query="SELECT id,name,phone FROM user where id!="+uid;
 		SQLiteDatabase db=this.getReadableDatabase();
 		
 		Cursor cursor=db.rawQuery(query,null);
@@ -150,9 +150,9 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		SQLiteDatabase database = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("userid", userid);
-		values.put("transactionid", transactionid);
+		values.put("transid", transactionid);
 		values.put("amount", amount);
-		long v = database.insert("userGroup", null, values);
+		long v = database.insert("userTransaction", null, values);
 		database.close();
 		return v;
 	}
