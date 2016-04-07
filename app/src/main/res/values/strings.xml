@@ -22,4 +22,5 @@
     <string name="title_activity_dashboard">Dashboard</string>
     <string name="title_activity_create_group">CreateGroup</string>
     <string name="title_activity_add_transaction">add_transaction</string>
+    <string name="title_activity_transaction">transaction</string>
 </resources>

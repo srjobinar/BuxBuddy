@@ -26,6 +26,8 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
     ArrayList<String> trans=new ArrayList<String>();
     EventsMenuDB db = new EventsMenuDB(this);
     List<Event> list=new ArrayList<Event>();
+    ArrayList<Integer> transids=new ArrayList<Integer>();
+    Event e;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,9 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
         list = db.getTransactionsList(gid);
         ListIterator<Event> iterator = list.listIterator();
         while(iterator.hasNext()){
-            trans.add(iterator.next().transactionName);
+            e = iterator.next();
+            trans.add(e.transactionName);
+            transids.add(e.transactionId);
         }
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,trans);
         t.setAdapter(adapter);
@@ -88,6 +92,11 @@ public class Group extends AppCompatActivity implements AdapterView.OnItemClickL
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "You chose "+ position,Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(getApplicationContext(), transaction.class);
+        i.putExtra("gid",gid);
+        i.putExtra("uid",uid);
+        i.putExtra("tid",transids.get(position));
+        startActivity(i);
 
     }
 

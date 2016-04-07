@@ -42,6 +42,12 @@ public class Event {
 		this.transactionName = transactionName;
 		this.amount = amount;
 	}
+	public Event(int userId,int amount,String userName) {
+
+		this.userId = userId;
+		this.userName = userName;
+		this.amount = amount;
+	}
 	
 
 
