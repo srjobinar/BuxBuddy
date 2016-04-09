@@ -65,7 +65,7 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent i = new Intent(getApplicationContext(), Group.class);
+        Intent i = new Intent(getApplicationContext(), Group_slide.class);
         i.putExtra("gid",groupids.get(position));
         i.putExtra("uid", uid);
         Log.i("check", groupids.get(position)+"");

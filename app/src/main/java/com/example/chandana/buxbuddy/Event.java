@@ -14,6 +14,7 @@ public class Event {
 	public int transactionId;
 	public String transactionName;
 	public int amount;
+	public int fund;
 	/**/
 	
 	public Event(int userId,String userName,String userPhone,String password) {
@@ -48,6 +49,14 @@ public class Event {
 		this.userName = userName;
 		this.amount = amount;
 	}
+
+	public Event(String userName,int userId,int fund) {
+
+		this.userId = userId;
+		this.userName = userName;
+		this.fund = fund;
+	}
+
 	
 
 

@@ -19,11 +19,11 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EventsMenuDB(Context context, String name, CursorFactory factory,
+	/*public EventsMenuDB(Context context, String name, CursorFactory factory,
 			int version, DatabaseErrorHandler errorHandler) {
 		super(context, name, factory, version, errorHandler);
 		// TODO Auto-generated constructor stub
-	}
+	}*/
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -98,7 +98,10 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 	public List<Event> getTransactionsList(int x){
 		List<Event> list=new ArrayList<Event>();
 		String query="SELECT id,name,amount FROM transactions where groupid="+x;
-		SQLiteDatabase db=this.getReadableDatabase();
+		SQLiteDatabase db= getReadableDatabase();
+		if(db==null){
+			Log.d("j","null");
+		}
 
 		Cursor cursor=db.rawQuery(query,null);
 
@@ -135,6 +138,26 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	}
 
+	public List<Event> getFundsList(int x){
+		List<Event> list=new ArrayList<Event>();
+		String query="SELECT name,id,fund FROM user inner join funds on user.id=funds.userid where groupid="+x;
+		SQLiteDatabase db=this.getReadableDatabase();
+
+		Cursor cursor=db.rawQuery(query,null);
+
+		if(cursor.moveToFirst()){
+			do{
+				Event event=new Event(cursor.getString(cursor.getColumnIndex("name")),cursor.getInt(cursor.getColumnIndex("id")),
+						cursor.getInt(cursor.getColumnIndex("fund")));
+				list.add(event);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return list;
+
+	}
+
 	public long creategroup(String name) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -153,6 +176,27 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		long v = database.insert("transactions", null, values);
 		database.close();
 		return v;
+	}
+
+	public void createfund(Integer userid,Integer grpid) {
+		SQLiteDatabase database = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("userid", userid);
+		values.put("groupid", grpid);
+		values.put("fund", 0);
+		database.insert("funds", null, values);
+		database.close();
+	}
+
+	public void updatefund(Integer userid,Integer grpid,Integer amnt) {
+		SQLiteDatabase database = this.getWritableDatabase();
+//		ContentValues values = new ContentValues();
+//		values.put("userid", userid);
+//		values.put("groupid", grpid);
+//		values.put("fund", +amnt);
+//		 database.update("funds", values, "where userid =" + userid + " AND groupid=" + grpid, null);
+		database.execSQL("UPDATE funds SET fund=fund+"+amnt+" where userid ="+userid+" AND groupid="+grpid);
+		database.close();
 	}
 
 	public long createusergroup(int userid,int groupid,int admin) {

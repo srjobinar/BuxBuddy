@@ -32,7 +32,7 @@ public class CreateGroup extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent i=getIntent();
-        uid=i.getIntExtra("uid",-1);
+        uid=i.getIntExtra("uid", -1);
         userlist = db.getUsersList(uid);
 
 
@@ -61,12 +61,16 @@ public class CreateGroup extends AppCompatActivity {
                grpid = (int) db.creategroup(grpname.getText().toString());
                Log.i("check",grpid+"");
                 ListIterator<Event> iterator = list.listIterator();
+                Event e;
                 while(iterator.hasNext()){
-                    db.createusergroup(iterator.next().userId,grpid,0);
+                    e = iterator.next();
+                    db.createusergroup(e.userId,grpid,0);
+                    db.createfund(e.userId,grpid);
                 }
-                    db.createusergroup(iterator.next().userId,grpid,0);
+                    db.createusergroup(uid,grpid,1);
+                    db.createfund(uid, grpid);
 
-                Intent i = new Intent(getApplicationContext(), Group.class);
+                Intent i = new Intent(getApplicationContext(), Group_slide.class);
                 i.putExtra("gid",grpid);
                 i.putExtra("uid",uid);
                 startActivity(i);

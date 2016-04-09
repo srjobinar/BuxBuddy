@@ -29,6 +29,7 @@ public class add_transaction extends AppCompatActivity {
     List<Event> userlist = new ArrayList<Event>();
     EditText amount,trans_name;
     int gid,uid,amnt_per_user;
+    Event e;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -82,11 +83,14 @@ public class add_transaction extends AppCompatActivity {
                                        Log.i("trans",trans_name.getText().toString());
                                        ListIterator<Event> iterator = list.listIterator();
                                        while (iterator.hasNext()) {
-                                           db.createusertransaction(iterator.next().userId, transid, -1 * amnt_per_user);
+                                           e =iterator.next();
+                                           db.createusertransaction(e.userId, transid, -1 * amnt_per_user);
+                                           db.updatefund(e.userId,gid, -1 * amnt_per_user);
                                        }
                                        db.createusertransaction(uid, transid, list.size()*amnt_per_user);
+                                       db.updatefund(uid,gid, list.size()*amnt_per_user);
 
-                                       Intent i = new Intent(getApplicationContext(), Group.class);
+                                       Intent i = new Intent(getApplicationContext(), Group_slide.class);
                                        i.putExtra("gid",gid);
                                        i.putExtra("uid",uid);
                                        startActivity(i);
