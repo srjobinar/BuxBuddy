@@ -56,7 +56,11 @@
             android:label="@string/title_activity_group_user"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PersonalFunds" />
-        <activity android:name=".DashboardSlide"></activity>
+        <activity android:name=".DashboardSlide" />
+        <activity
+            android:name=".PersonalFund"
+            android:label="@string/title_activity_personal_fund"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

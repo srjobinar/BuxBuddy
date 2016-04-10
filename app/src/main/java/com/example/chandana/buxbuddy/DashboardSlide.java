@@ -14,7 +14,7 @@ public class DashboardSlide extends AppCompatActivity implements ActionBar.TabLi
     ViewPager v;
     DashboardAdapter da;
     private ActionBar actionbar;
-    int uid,gid;
+    int uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,6 @@ public class DashboardSlide extends AppCompatActivity implements ActionBar.TabLi
 
         Intent i=getIntent();
         uid=i.getIntExtra("uid", -1);
-        gid=i.getIntExtra("gid", -1);
 
         v = (ViewPager) findViewById(R.id.pager1);
         da = new DashboardAdapter(getSupportFragmentManager(),uid);

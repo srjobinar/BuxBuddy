@@ -57,6 +57,11 @@ public class Event {
 		this.fund = fund;
 	}
 
+	public Event(String groupName,int fund) {
+		this.groupName = groupName;
+		this.fund = fund;
+	}
+
 	public Event(int userId, int amount)
 	{
 		this.userId=userId;

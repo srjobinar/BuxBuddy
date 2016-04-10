@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  * Created by CHANDANA on 10-04-2016.
  */
 public class DashboardAdapter extends FragmentPagerAdapter {
-    int uid;
+    private int uid;
 
     public DashboardAdapter(FragmentManager fm, int uid) {
 
@@ -22,9 +22,18 @@ public class DashboardAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-                Dashboard g = new Dashboard();
-                g.setData(this.uid);
-                return g;
+        switch (position) {
+            case 0:
+            Dashboard g = new Dashboard();
+            g.setData(this.uid);
+            return g;
+            case 1:
+                PersonalFund pf = new PersonalFund();
+                pf.setData(this.uid);
+                return pf;
+            default:
+                return null;
+        }
 
     }
 

@@ -159,6 +159,26 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	}
 
+	public List<Event> getPersonalFundsList(int x){
+		List<Event> list=new ArrayList<Event>();
+		String query="SELECT name,fund FROM groups inner join funds on groups.id=funds.groupid where userid="+x;
+		SQLiteDatabase db=this.getReadableDatabase();
+
+		Cursor cursor=db.rawQuery(query,null);
+
+		if(cursor.moveToFirst()){
+			do{
+				Event event=new Event(cursor.getString(cursor.getColumnIndex("name")),
+						cursor.getInt(cursor.getColumnIndex("fund")));
+				list.add(event);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return list;
+
+	}
+
 	public long creategroup(String name) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -280,7 +300,7 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		List<Event> list = new ArrayList<Event>();
 		SQLiteDatabase db = this.getReadableDatabase();
 		String query= "select userid,amount from userTransaction where transid="+tid;
-		Cursor cursor=db.rawQuery(query,null);
+		Cursor cursor=db.rawQuery(query, null);
 		if(cursor.moveToFirst()){
 			do{
 				Event event=new Event(cursor.getInt(cursor.getColumnIndex("userid")),
