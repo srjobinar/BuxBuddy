@@ -1,5 +1,6 @@
 package com.example.chandana.buxbuddy;
 
+import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -264,7 +265,31 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		db.close();
 		return id;
 	}
-	
-	
 
+	public void deleteTransaction (int tid)
+	{
+		SQLiteDatabase db=this.getWritableDatabase();
+		String query = "DELETE FROM transactions WHERE id = "+tid;
+		db.execSQL(query);
+		query = "DELETE FROM userTransaction WHERE transid = "+tid;
+		db.execSQL(query);
+	}
+
+	public List<Event> getUserTransaction(int tid)
+	{
+		List<Event> list = new ArrayList<Event>();
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query= "select userid,amount from userTransaction where transid="+tid;
+		Cursor cursor=db.rawQuery(query,null);
+		if(cursor.moveToFirst()){
+			do{
+				Event event=new Event(cursor.getInt(cursor.getColumnIndex("userid")),
+						cursor.getInt(cursor.getColumnIndex("amount")));
+				list.add(event);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return list;
+	}
 }

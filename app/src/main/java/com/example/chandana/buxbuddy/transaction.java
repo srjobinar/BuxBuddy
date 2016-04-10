@@ -26,6 +26,7 @@ public class transaction extends AppCompatActivity{
     ArrayList<String> transMembers=new ArrayList<String>();
     EventsMenuDB db = new EventsMenuDB(this);
     List<Event> list=new ArrayList<Event>();
+    List<Event> list1=new ArrayList<Event>();
     Event e;
 
 
@@ -62,7 +63,18 @@ public class transaction extends AppCompatActivity{
 
         deleteButton.setOnClickListener(new Button.OnClickListener(){
               public void onClick(View v){
-
+                  db.deleteTransaction(tid);
+                  list1=db.getUserTransaction(tid);
+                  db.deleteTransaction(tid);
+                  ListIterator<Event> iterator = list1.listIterator();
+                  while(iterator.hasNext()){
+                      e= iterator.next();
+                      db.updatefund(e.userId,gid,-1*e.amount);
+                  }
+                  Intent i = new Intent(getApplicationContext(), Group_slide.class);
+                  i.putExtra("gid",gid);
+                  i.putExtra("uid", uid);
+                  startActivity(i);
               }
         });
         if(admin){

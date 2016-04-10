@@ -54,7 +54,9 @@
         <activity
             android:name=".GroupUser"
             android:label="@string/title_activity_group_user"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PersonalFunds" />
+        <activity android:name=".DashboardSlide"></activity>
     </application>
 
 </manifest>

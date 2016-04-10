@@ -57,7 +57,11 @@ public class Event {
 		this.fund = fund;
 	}
 
-	
+	public Event(int userId, int amount)
+	{
+		this.userId=userId;
+		this.amount=amount;
+	}
 
 
 	
