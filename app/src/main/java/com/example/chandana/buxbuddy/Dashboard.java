@@ -1,5 +1,6 @@
 package com.example.chandana.buxbuddy;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,24 +18,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Dashboard extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class Dashboard extends Fragment implements AdapterView.OnItemClickListener {
+    int uid;
+
+    public Dashboard(){
+
+    }
+    public void setData(int uid){
+        this.uid = uid;
+    }
 
     ListView g;
     ArrayList<String> groups=new ArrayList<String>();
     ArrayList<Integer> groupids=new ArrayList<Integer>();
-    EventsMenuDB db = new EventsMenuDB(this);
+    EventsMenuDB db;
     List<Event> list=new ArrayList<Event>();
     Event e;
-    int uid;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
 
-        Intent i=getIntent();
-        uid=i.getIntExtra("uid", -1);
 
+        db = new EventsMenuDB(getActivity());
         list = db.getGroupsList(uid);
         ListIterator<Event> iterator = list.listIterator();
         while(iterator.hasNext()){
@@ -44,28 +49,64 @@ public class Dashboard extends AppCompatActivity implements AdapterView.OnItemCl
         }
 
 
-        g = (ListView) findViewById(R.id.listView2);
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,groups);
+        g = (ListView) getActivity().findViewById(R.id.listView2);
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,groups);
         g.setAdapter(adapter);
         g.setOnItemClickListener(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), CreateGroup.class);
+                Intent i = new Intent(getContext(), CreateGroup.class);
                 i.putExtra("uid",uid);
                 startActivity(i);
             }
         });
     }
 
+    //@Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_dashboard);
+//
+//        Intent i=getIntent();
+//        uid=i.getIntExtra("uid", -1);
+//
+//        list = db.getGroupsList(uid);
+//    ListIterator<Event> iterator = list.listIterator();
+//    while(iterator.hasNext()){
+//        e = iterator.next();
+//        groups.add(e.groupName);
+//        groupids.add(e.groupId);
+//    }
+//
+//
+//    g = (ListView) findViewById(R.id.listView2);
+//    ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,groups);
+//    g.setAdapter(adapter);
+//    g.setOnItemClickListener(this);
+//
+//    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//    setSupportActionBar(toolbar);
+//
+//    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//    fab.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            Intent i = new Intent(getApplicationContext(), CreateGroup.class);
+//            i.putExtra("uid",uid);
+//            startActivity(i);
+//        }
+//    });
+//}
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent i = new Intent(getApplicationContext(), Group_slide.class);
+        Intent i = new Intent(getContext(), Group_slide.class);
         i.putExtra("gid",groupids.get(position));
         i.putExtra("uid", uid);
         Log.i("check", groupids.get(position)+"");

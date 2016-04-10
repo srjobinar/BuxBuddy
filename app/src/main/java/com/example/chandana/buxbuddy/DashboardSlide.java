@@ -11,6 +11,11 @@ import android.util.Log;
 
 public class DashboardSlide extends AppCompatActivity implements ActionBar.TabListener {
 
+    ViewPager v;
+    DashboardAdapter da;
+    private ActionBar actionbar;
+    int uid,gid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,21 +26,37 @@ public class DashboardSlide extends AppCompatActivity implements ActionBar.TabLi
         uid=i.getIntExtra("uid", -1);
         gid=i.getIntExtra("gid", -1);
 
-        v = (ViewPager) findViewById(R.id.pager);
-        pa = new PagerAdapter(getSupportFragmentManager(),uid,gid);
-        v.setAdapter(pa);
+        v = (ViewPager) findViewById(R.id.pager1);
+        da = new DashboardAdapter(getSupportFragmentManager(),uid);
+        v.setAdapter(da);
         actionbar = getSupportActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         if(actionbar== null){
             Log.i("actionbar", "null");
         }
-        actionbar.addTab(actionbar.newTab().setText("Transactions").setTabListener(this));
-        actionbar.addTab(actionbar.newTab().setText("Users").setTabListener(this));
+        actionbar.addTab(actionbar.newTab().setText("Groups").setTabListener(this));
+        actionbar.addTab(actionbar.newTab().setText("Personal Funds").setTabListener(this));
+        v.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                actionbar.setSelectedNavigationItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+        v.setCurrentItem(tab.getPosition());
     }
 
     @Override

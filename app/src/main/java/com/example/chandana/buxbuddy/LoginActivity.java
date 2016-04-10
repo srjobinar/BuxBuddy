@@ -368,7 +368,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                Intent i = new Intent(getApplicationContext(), Dashboard.class);
+                Intent i = new Intent(getApplicationContext(), DashboardSlide.class);
                 i.putExtra("uid",userid);
                 startActivity(i);
                 setContentView(R.layout.activity_dashboard);
