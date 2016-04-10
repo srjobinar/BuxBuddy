@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class transaction extends AppCompatActivity{
 
 
     int gid,uid,tid;
+    Boolean admin;
     ListView t;
     ArrayList<String> transMembers=new ArrayList<String>();
     EventsMenuDB db = new EventsMenuDB(this);
@@ -43,6 +45,7 @@ public class transaction extends AppCompatActivity{
         TextView tv = (TextView) findViewById(R.id.textView);
 
         list = db.getTransactionMembersList(tid);
+        admin = db.checkAdmin(uid,gid);
         ListIterator<Event> iterator = list.listIterator();
         while(iterator.hasNext()){
             e= iterator.next();
@@ -55,6 +58,16 @@ public class transaction extends AppCompatActivity{
             }
         }
 
+        Button deleteButton = (Button) findViewById(R.id.button3);
+
+        deleteButton.setOnClickListener(new Button.OnClickListener(){
+              public void onClick(View v){
+
+              }
+        });
+        if(admin){
+            deleteButton.setVisibility(View.VISIBLE);
+        }
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,transMembers);
         t.setAdapter(adapter);
 

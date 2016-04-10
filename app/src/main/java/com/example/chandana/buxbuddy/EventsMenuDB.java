@@ -195,7 +195,7 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 //		values.put("groupid", grpid);
 //		values.put("fund", +amnt);
 //		 database.update("funds", values, "where userid =" + userid + " AND groupid=" + grpid, null);
-		database.execSQL("UPDATE funds SET fund=fund+"+amnt+" where userid ="+userid+" AND groupid="+grpid);
+		database.execSQL("UPDATE funds SET fund=fund+" + amnt + " where userid =" + userid + " AND groupid=" + grpid);
 		database.close();
 	}
 
@@ -237,6 +237,21 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		db.close();
 		return list;
 		
+	}
+
+	public Boolean checkAdmin(Integer uid,Integer gid){
+		SQLiteDatabase db=this.getReadableDatabase();
+		String query="SELECT admin FROM userGroup where userid="+uid+" AND groupid="+gid;
+		Cursor cursor=db.rawQuery(query,null);
+		if(cursor.moveToFirst()){
+			if(cursor.getInt(0)==1)
+				return true;
+			else
+				return false;
+		}
+		cursor.close();
+		db.close();
+		return false;
 	}
 	
 	public String getEventId(String name){
