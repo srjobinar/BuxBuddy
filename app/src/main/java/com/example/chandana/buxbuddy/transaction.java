@@ -1,5 +1,7 @@
 package com.example.chandana.buxbuddy;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class transaction extends AppCompatActivity{
+public class transaction extends AppCompatActivity implements AlertDialog.OnClickListener{
 
 
     int gid,uid,tid;
@@ -63,7 +65,6 @@ public class transaction extends AppCompatActivity{
 
         deleteButton.setOnClickListener(new Button.OnClickListener(){
               public void onClick(View v){
-                  db.deleteTransaction(tid);
                   list1=db.getUserTransaction(tid);
                   db.deleteTransaction(tid);
                   ListIterator<Event> iterator = list1.listIterator();
@@ -77,11 +78,40 @@ public class transaction extends AppCompatActivity{
                   startActivity(i);
               }
         });
+
+        Button  rollback = (Button) findViewById(R.id.button4);
+
+        rollback.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                db.setRequest(uid,gid,tid,0);
+                AlertDialog alertDialog = new AlertDialog.Builder(transaction.this).create();
+                alertDialog.setTitle("Request");
+                alertDialog.setMessage("Request Send");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Button button = (Button) findViewById(R.id.button4);
+                                button.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
         if(admin){
             deleteButton.setVisibility(View.VISIBLE);
+        }
+        else{
+           rollback.setVisibility(View.VISIBLE);
         }
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,transMembers);
         t.setAdapter(adapter);
 
     }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+
+    }
+
 }

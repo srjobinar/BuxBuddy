@@ -42,4 +42,13 @@
         android:layout_centerHorizontal="true"
         android:visibility="invisible" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Request Rollback"
+        android:id="@+id/button4"
+        android:layout_below="@+id/listView4"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
 </RelativeLayout>

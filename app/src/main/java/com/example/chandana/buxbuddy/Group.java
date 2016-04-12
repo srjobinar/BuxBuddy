@@ -1,6 +1,8 @@
 package com.example.chandana.buxbuddy;
 
 //import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,8 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Group extends Fragment implements AdapterView.OnItemClickListener {
-    private int gid,uid;
+public class Group extends Fragment implements AdapterView.OnItemClickListener,AlertDialog.OnClickListener {
+    private int gid,uid,tid;
+    private Boolean admin;
 
     public Group(){
 
@@ -37,6 +40,7 @@ public class Group extends Fragment implements AdapterView.OnItemClickListener {
     ArrayList<String> trans=new ArrayList<String>();
     EventsMenuDB db;
     List<Event> list=new ArrayList<Event>();
+    List<Event> list1=new ArrayList<Event>();
     ArrayList<Integer> transids=new ArrayList<Integer>();
     Event e;
 
@@ -44,6 +48,7 @@ public class Group extends Fragment implements AdapterView.OnItemClickListener {
         super.onActivityCreated(savedInstanceState);
         t = (ListView) getActivity().findViewById(R.id.listView);
         db =  new EventsMenuDB(getActivity());
+        admin = db.checkAdmin(uid,gid);
         list = db.getTransactionsList(gid);
 
         ListIterator<Event> iterator = list.listIterator();
@@ -67,6 +72,53 @@ public class Group extends Fragment implements AdapterView.OnItemClickListener {
                 startActivity(i);
             }
         });
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        Toast.makeText(getActivity(),"Yes Button Clicked",Toast.LENGTH_SHORT).show();
+                        db.updateStatus(tid, 1);
+                        list1=db.getUserTransaction(tid);
+                        db.deleteTransaction(tid);
+                        ListIterator<Event> iterator = list1.listIterator();
+                        while(iterator.hasNext()){
+                            e= iterator.next();
+                            db.updatefund(e.userId,gid,-1*e.amount);
+                        }
+                        Intent i = new Intent(getContext(), Group_slide.class);
+                        i.putExtra("gid",gid);
+                        i.putExtra("uid", uid);
+                        startActivity(i);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        db.updateStatus(tid,-1);
+                        Toast.makeText(getActivity(),"No Button Clicked",Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        };
+
+        if(admin) {
+            list = db.getRequestList(gid);
+            if(list.size()==0){
+                Log.i("ListEmpty","True");
+            }
+            ListIterator<Event> iterate = list.listIterator();
+            while (iterate.hasNext()) {
+                e = iterate.next();
+                tid=e.transactionId;
+                if(e.status==0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(e.message).setPositiveButton("Accept", dialogClickListener)
+                            .setNegativeButton("Reject", dialogClickListener).show();
+                }
+            }
+        }
    }
 
     @Override
@@ -82,6 +134,11 @@ public class Group extends Fragment implements AdapterView.OnItemClickListener {
         i.putExtra("uid",uid);
         i.putExtra("tid",transids.get(position));
         startActivity(i);
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+
     }
     // @Override
 //    protected void onCreate(Bundle savedInstanceState) {

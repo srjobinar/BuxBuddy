@@ -15,6 +15,8 @@ public class Event {
 	public String transactionName;
 	public int amount;
 	public int fund;
+	public String message;
+	public int status;
 	/**/
 	
 	public Event(int userId,String userName,String userPhone,String password) {
@@ -66,6 +68,14 @@ public class Event {
 	{
 		this.userId=userId;
 		this.amount=amount;
+	}
+
+	public Event(String username,String transaction,int tid,int status){
+		this.userName=username;
+		this.transactionName=transaction;
+		this.transactionId=tid;
+		this.message= userName+" requests rollback of "+transactionName;
+		this.status=status;
 	}
 
 

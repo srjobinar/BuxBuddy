@@ -312,4 +312,66 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		db.close();
 		return list;
 	}
+
+	public void setRequest(int uid,int gid,int transid,int type){
+		SQLiteDatabase db=this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("fromid", uid);
+		values.put("transid", transid);
+		values.put("groupid", gid);
+		if(type!=0){
+			values.put("amount",type);
+			values.put("type", 1);
+		}
+		else {
+			values.put("type", type);
+		}
+		long v = db.insert("requests", null, values);
+		db.close();
+	}
+
+	public String getUsername(int uid){
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query = "select name from user where id="+uid;
+		Cursor cursor=db.rawQuery(query, null);
+		cursor.moveToFirst();
+		return cursor.getString(cursor.getColumnIndex("name"));
+	}
+
+	public String getTransaction(int tid){
+		String trans="";
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query = "select name from transactions where id="+tid;
+		Cursor cursor=db.rawQuery(query, null);
+		if(cursor.moveToFirst()) {
+			trans= cursor.getString(cursor.getColumnIndex("name"));
+		}
+		return trans;
+	}
+
+	public List<Event> getRequestList(int gid){
+		List<Event> list = new ArrayList<Event>();
+		String username,transaction;
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query= "select fromid,transid,status from requests where groupid="+gid;
+		Cursor cursor=db.rawQuery(query, null);
+		if(cursor.moveToFirst()){
+			do{
+				username = getUsername(cursor.getInt(cursor.getColumnIndex("fromid")));
+				transaction = getTransaction(cursor.getInt(cursor.getColumnIndex("transid")));
+				Event event=new Event(username,transaction,cursor.getInt(cursor.getColumnIndex("transid")),
+						cursor.getInt(cursor.getColumnIndex("status")));
+				list.add(event);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return list;
+	}
+
+	public void updateStatus(int tid,int status){
+		SQLiteDatabase database = this.getWritableDatabase();
+		database.execSQL("UPDATE requests SET status="+status+" where transid =" + tid);
+		database.close();
+	}
 }

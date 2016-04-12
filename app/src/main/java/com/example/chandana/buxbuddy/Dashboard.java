@@ -1,5 +1,7 @@
 package com.example.chandana.buxbuddy;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -68,6 +70,8 @@ public class Dashboard extends Fragment implements AdapterView.OnItemClickListen
                 startActivity(i);
             }
         });
+
+
     }
 
     @Override
@@ -120,4 +124,5 @@ public class Dashboard extends Fragment implements AdapterView.OnItemClickListen
         startActivity(i);
         //Toast.makeText(this, position,Toast.LENGTH_SHORT).show();
     }
+
 }
