@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -74,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Integer userid;
     private String dbpath;
     private int flag=0;
+    SharedPreferences sharedPref;
 
 
     @Override
@@ -82,37 +84,49 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
 
-        if(!checkDB()){
+        if (!checkDB()) {
             copyDataBase();
         }
 
 
-        db = new EventDB(this);
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
+        sharedPref = getSharedPreferences("data", MODE_PRIVATE);
+        int number = sharedPref.getInt("isLogged", 0);
+        if (number != 0) {
+            userid = sharedPref.getInt("uid", 0);
+            Intent i = new Intent(getApplicationContext(), DashboardSlide.class);
+            i.putExtra("uid", userid);
+            startActivity(i);
+            setContentView(R.layout.activity_dashboard);
+        } else {
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mNameView = (EditText) findViewById(R.id.name);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+
+            db = new EventDB(this);
+            mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
+
+            mPasswordView = (EditText) findViewById(R.id.password);
+            mNameView = (EditText) findViewById(R.id.name);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                        attemptLogin();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+            Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin();
+                }
+            });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
+        }
     }
 
 
@@ -368,6 +382,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                SharedPreferences.Editor prefEditor = sharedPref.edit();
+                prefEditor.putInt("isLogged",1);
+                prefEditor.putInt("uid",userid);
+                prefEditor.commit();
                 Intent i = new Intent(getApplicationContext(), DashboardSlide.class);
                 i.putExtra("uid",userid);
                 startActivity(i);

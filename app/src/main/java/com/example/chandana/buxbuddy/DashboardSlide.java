@@ -101,7 +101,7 @@ public class DashboardSlide extends AppCompatActivity implements ActionBar.TabLi
                 .setContentText("You have requests pending in "+gname);
 
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-        notificationManager.cancel(NOTIFICATION_ID);
+       // notificationManager.cancel(NOTIFICATION_ID);
 
     }
 

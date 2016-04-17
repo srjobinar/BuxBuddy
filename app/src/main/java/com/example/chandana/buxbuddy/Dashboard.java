@@ -2,6 +2,7 @@ package com.example.chandana.buxbuddy;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class Dashboard extends Fragment implements AdapterView.OnItemClickListen
     EventsMenuDB db;
     List<Event> list=new ArrayList<Event>();
     Event e;
+    SharedPreferences sharedPref;
 
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
@@ -67,6 +69,20 @@ public class Dashboard extends Fragment implements AdapterView.OnItemClickListen
             public void onClick(View view) {
                 Intent i = new Intent(getContext(), CreateGroup.class);
                 i.putExtra("uid",uid);
+                startActivity(i);
+            }
+        });
+
+        sharedPref = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
+
+        FloatingActionButton fab1 = (FloatingActionButton) getActivity().findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor prefEditor = sharedPref.edit();
+                prefEditor.putInt("isLogged",0);
+                prefEditor.commit();
+                Intent i = new Intent(getContext(), LoginActivity.class);
                 startActivity(i);
             }
         });
