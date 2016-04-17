@@ -1,7 +1,10 @@
 package com.example.chandana.buxbuddy;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +12,22 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
 public class DashboardSlide extends AppCompatActivity implements ActionBar.TabListener {
 
     ViewPager v;
     DashboardAdapter da;
     private ActionBar actionbar;
     int uid;
+    EventsMenuDB db;
+    List<Event> grplist=new ArrayList<Event>();
+    Event e;
+    private Boolean admin;
+    public static final int NOTIFICATION_ID = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +64,45 @@ public class DashboardSlide extends AppCompatActivity implements ActionBar.TabLi
 
             }
         });
+
+        db =  new EventsMenuDB(this);
+        grplist=db.getRequestGroupsList();
+        if(grplist.size()==0)
+        {
+            Log.i("ListEmpty","TrueHERE");
+
+        }
+        else{
+        ListIterator<Event> iterate = grplist.listIterator();
+        while (iterate.hasNext()) {
+            e = iterate.next();
+            admin=db.checkAdmin(uid,e.groupId);
+            if(admin)
+            {
+                userNotify(e.groupName);
+            }
+        }}
+
+        // userNotify();
+    }
+
+    public void userNotify(String gname)
+    {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(this
+                .NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setVibrate(new long[] {1, 1, 1})
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentTitle("Rollback Request")
+                .setAutoCancel(true)
+                .setContentText("You have requests pending in "+gname);
+
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+        notificationManager.cancel(NOTIFICATION_ID);
+
     }
 
     @Override

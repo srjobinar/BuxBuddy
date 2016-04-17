@@ -96,6 +96,24 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	}
 
+	public List<Event> getRequestGroupsList(){
+		List<Event> list=new ArrayList<Event>();
+		String query="SELECT id,name FROM groups inner join requests on groups.id=requests.groupid where status = 0";
+		SQLiteDatabase db=this.getReadableDatabase();
+
+		Cursor cursor=db.rawQuery(query,null);
+
+		if(cursor.moveToFirst()){
+			do{
+				Event event=new Event(cursor.getInt(cursor.getColumnIndex("id")),cursor.getString(cursor.getColumnIndex("name")));
+				list.add(event);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return list;
+	}
+
 	public List<Event> getTransactionsList(int x){
 		List<Event> list=new ArrayList<Event>();
 		String query="SELECT id,name,amount FROM transactions where groupid="+x;
