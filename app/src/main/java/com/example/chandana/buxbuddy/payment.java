@@ -24,11 +24,10 @@ import java.util.ListIterator;
 public class payment extends AppCompatActivity {
 
     EventsMenuDB db = new EventsMenuDB(this);
-    paymentlistAdapter.OnSelectListener listener;
     Event user;
     List<Event> userlist = new ArrayList<Event>();
     EditText amount,trans_name;
-    int gid,uid,amnt_per_user;
+    int gid,uid,to,amnt_per_user;
     Event e;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -46,18 +45,8 @@ public class payment extends AppCompatActivity {
         Intent i = getIntent();
         gid = i.getIntExtra("gid", -1);
         uid = i.getIntExtra("uid",-1);
+        to = i.getIntExtra("to",-1);
         Log.i("check",gid+"");
-        userlist = db.getPositiveMembersList(gid,uid);
-        ListView lv = (ListView) findViewById(R.id.listView8);
-        listener = new paymentlistAdapter.OnSelectListener() {
-            @Override
-            public void onSelect(int position, boolean checked) {
-                if (checked)
-                    user = userlist.get(position);
-            }
-        };
-        paymentlistAdapter exhibitionAdapter = new paymentlistAdapter(this, R.layout.payment_list_item,userlist, listener);
-        lv.setAdapter(exhibitionAdapter);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -70,8 +59,7 @@ public class payment extends AppCompatActivity {
                                    @Override
                                    public void onClick (View v){
                                        amount = (EditText) findViewById(R.id.editText2);
-                                       db.requestPayment(gid, uid, user, Integer.parseInt(amount.getText().toString()));
-
+                                       db.requestPayment(gid, uid,to, Integer.parseInt(amount.getText().toString()));
                                        Intent i = new Intent(getApplicationContext(), Group_slide.class);
                                        i.putExtra("gid",gid);
                                        i.putExtra("uid",uid);

@@ -314,7 +314,7 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 	public Boolean checkAdmin(Integer uid,Integer gid){
 		SQLiteDatabase db=this.getReadableDatabase();
 		String query="SELECT admin FROM userGroup where userid="+uid+" AND groupid="+gid;
-		Cursor cursor=db.rawQuery(query,null);
+		Cursor cursor=db.rawQuery(query, null);
 		if(cursor.moveToFirst()){
 			if(cursor.getInt(0)==1)
 				return true;
@@ -444,27 +444,43 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 	public void removeUser(int uid, int gid)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.execSQL("Delete from userGroup where userid = "+uid+" and groupid = "+gid);
+		db.execSQL("Delete from userGroup where userid = " + uid + " and groupid = " + gid);
 		db.execSQL("Delete from funds where userid = " + uid + " and groupid = " + gid);
 		db.close();
 	}
 
-	public void requestPayment(int gid,int uid,Event event,int amt){
+	public void requestPayment(int gid,int uid,int toid,int amt)
+	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("fromid", uid);
 		values.put("groupid", gid);
-		values.put("toid", event.userId);
+		values.put("toid", toid);
 		values.put("amount", amt);
-		db.insert("payments", null, values);
+		if(checkduplicate(gid, uid, toid))
+			db.execSQL("update payments set amount=amount+"+amt+" where fromid="+uid+" and toid="+toid+" and groupid="+gid+" and status=0" );
+		else {
+			db.insert("payments", null, values);
+		}
 		db.close();
+	}
+
+	public Boolean checkduplicate(int gid,int uid,int toid)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query="select * from payments where fromid="+uid+" and toid="+toid+" and groupid="+gid+" and status=0";
+		Cursor cursor=db.rawQuery(query, null);
+		if(cursor.getCount()==0){
+			return false;
+		}
+		return true;
 	}
 
 	public List<Event> getPaymentsList(int uid,int gid){
 		List<Event> list = new ArrayList<Event>();
 		String username,transaction;
 		SQLiteDatabase db = this.getReadableDatabase();
-		String query= "select name,amount,phone,fromid from user inner join payments on user.id=payments.fromid where toid="+uid+" where status=0";
+		String query= "select name,amount,phone,fromid from user inner join payments on user.id=payments.fromid where toid="+uid+" and status=0";
 		Cursor cursor=db.rawQuery(query, null);
 		if(cursor.moveToFirst()){
 			do{
@@ -480,7 +496,14 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	public void updateStatusForPayment(int uid,int from,int gid,int status){
 		SQLiteDatabase database = this.getWritableDatabase();
-		database.execSQL("UPDATE payments SET status=" + status + " where fromid ="+from+" and toid="+uid+" and groupid="+gid);
+		database.execSQL("UPDATE payments SET status=" + status + " where fromid =" + from + " and toid=" + uid + " and groupid=" + gid);
 		database.close();
+	}
+
+	public void makeadmin(int gid,int uid)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL("update userGroup set admin=1 where userid="+uid+" and groupid="+gid);
+		db.close();
 	}
 }

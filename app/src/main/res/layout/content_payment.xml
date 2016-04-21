@@ -18,25 +18,17 @@
         android:id="@+id/editText2"
         android:hint="@string/prompt_Amount"
         android:inputType="number"
+        android:layout_marginTop="41dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Confirm"
         android:id="@+id/button2"
+        android:layout_marginTop="45dp"
         android:layout_below="@+id/editText2"
-        android:layout_toRightOf="@+id/editText2"
-        android:layout_toEndOf="@+id/editText2" />
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView8"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button2" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
