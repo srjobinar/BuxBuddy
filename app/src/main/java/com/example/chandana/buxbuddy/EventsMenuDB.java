@@ -364,19 +364,12 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 		return list;
 	}
 
-	public void setRequest(int uid,int gid,int transid,int type){
+	public void setRequest(int uid,int gid,int transid){
 		SQLiteDatabase db=this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("fromid", uid);
 		values.put("transid", transid);
 		values.put("groupid", gid);
-		if(type!=0){
-			values.put("amount",type);
-			values.put("type", 1);
-		}
-		else {
-			values.put("type", type);
-		}
 		long v = db.insert("requests", null, values);
 		db.close();
 	}

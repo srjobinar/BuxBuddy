@@ -130,11 +130,13 @@ public class Group_slide extends AppCompatActivity implements ActionBar.TabListe
                 prefEditor.commit();
                 Intent i = new Intent(this, LoginActivity.class);
                 startActivity(i);
+                return true;
             case R.id.action_requestPayment:
-                    Intent j = new Intent(this, payment.class);
-                    j.putExtra("gid", gid);
-                    j.putExtra("uid", uid);
-                    startActivity(j);
+                Intent j = new Intent(this, payment.class);
+                j.putExtra("gid", gid);
+                j.putExtra("uid", uid);
+                startActivity(j);
+                return true;
 
             default:
                 // If we got here, the user's action was not recognized.
@@ -155,6 +157,9 @@ public class Group_slide extends AppCompatActivity implements ActionBar.TabListe
                 case DialogInterface.BUTTON_POSITIVE:
                     db.divide_fund(uid,gid,can_leave);
                     db.removeUser(uid,gid);
+                    Intent i = new Intent(getApplicationContext(), DashboardSlide.class);
+                    i.putExtra("uid", uid);
+                    startActivity(i);
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:

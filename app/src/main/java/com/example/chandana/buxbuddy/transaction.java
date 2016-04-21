@@ -83,7 +83,7 @@ public class transaction extends AppCompatActivity implements AlertDialog.OnClic
 
         rollback.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-                db.setRequest(uid,gid,tid,0);
+                db.setRequest(uid,gid,tid);
                 AlertDialog alertDialog = new AlertDialog.Builder(transaction.this).create();
                 alertDialog.setTitle("Request");
                 alertDialog.setMessage("Request Send");

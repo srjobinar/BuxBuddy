@@ -85,9 +85,11 @@ public class DashboardSlide extends AppCompatActivity implements ActionBar.TabLi
             admin=db.checkAdmin(uid,e.groupId);
             if(admin)
             {
+                Log.i("Admin","true");
                 userNotify(e.groupName);
             }
-        }}
+        }
+        }
 
         // userNotify();
     }

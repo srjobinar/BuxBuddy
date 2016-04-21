@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">BuxBuddy</string>
     <string name="action_settings">Settings</string>
-    <string name="action_logout">logout</string>
+    <string name="action_logout">Logout</string>
     <string name="action_leavegroup">Leave Group</string>
+    <string name="action_makeAdmin">Make Admin</string>
     <string name="action_requestPayment">Request Payment</string>
     <string name="title_activity_login">BuxBuddy</string>
 
