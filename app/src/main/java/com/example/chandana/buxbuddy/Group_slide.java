@@ -168,4 +168,11 @@ public class Group_slide extends AppCompatActivity implements ActionBar.TabListe
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(getApplicationContext(), DashboardSlide.class);
+        i.putExtra("uid",uid);
+        startActivity(i);
+    }
 }
