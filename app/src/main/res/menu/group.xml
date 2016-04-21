@@ -1,9 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.chandana.buxbuddy.Group" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_leavegroup"
+        android:title="@string/action_leavegroup"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item android:id="@+id/action_logout"

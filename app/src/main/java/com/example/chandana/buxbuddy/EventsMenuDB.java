@@ -177,6 +177,19 @@ public class EventsMenuDB extends SQLiteOpenHelper {
 
 	}
 
+	public Integer can_leave(int gid,int uid){
+		int x;
+		String query="SELECT fund FROM funds where userid="+uid+" AND groupid="+gid;
+		SQLiteDatabase db=this.getReadableDatabase();
+
+		Cursor cursor=db.rawQuery(query,null);
+		cursor.moveToFirst();
+		x = cursor.getInt(cursor.getColumnIndex("fund"));
+		cursor.close();
+		db.close();
+		return x;
+	}
+
 	public List<Event> getPersonalFundsList(int x){
 		List<Event> list=new ArrayList<Event>();
 		String query="SELECT name,fund FROM groups inner join funds on groups.id=funds.groupid where userid="+x;
