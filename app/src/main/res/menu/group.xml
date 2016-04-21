@@ -9,4 +9,8 @@
         android:title="@string/action_logout"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_requestPayment"
+        android:title="@string/action_requestPayment"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

@@ -103,6 +103,31 @@ public class Group extends Fragment implements AdapterView.OnItemClickListener,A
             }
         };
 
+        DialogInterface.OnClickListener dialogClickListenerForPayment = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        Toast.makeText(getActivity(),"Yes Button Clicked",Toast.LENGTH_SHORT).show();
+                        db.updateStatusForPayment(uid,e.userId,gid,1);
+                        db.updatefund(uid,gid,-1*e.amount);
+                        db.updatefund(e.userId,gid,e.amount);
+                        Intent i = new Intent(getContext(), Group_slide.class);
+                        i.putExtra("gid",gid);
+                        i.putExtra("uid", uid);
+                        startActivity(i);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        db.updateStatusForPayment(uid,e.userId,gid,-1);
+                        Toast.makeText(getActivity(),"No Button Clicked",Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        };
+
         if(admin) {
             list = db.getRequestList(gid);
             if(list.size()==0){
@@ -117,6 +142,17 @@ public class Group extends Fragment implements AdapterView.OnItemClickListener,A
                     builder.setMessage(e.message).setPositiveButton("Accept", dialogClickListener)
                             .setNegativeButton("Reject", dialogClickListener).show();
                 }
+            }
+        }
+
+        list = db.getPaymentsList(uid, gid);
+        ListIterator<Event> iterate = list.listIterator();
+        while (iterate.hasNext()) {
+            e = iterate.next();
+            if(e.amount>=0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(e.userName+" requests approval for payment of Rs."+e.amount).setPositiveButton("Accept", dialogClickListenerForPayment)
+                        .setNegativeButton("Reject", dialogClickListenerForPayment).show();
             }
         }
    }

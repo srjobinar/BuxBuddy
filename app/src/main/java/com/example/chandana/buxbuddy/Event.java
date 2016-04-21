@@ -78,6 +78,14 @@ public class Event {
 		this.status=status;
 	}
 
+	public Event(String name,int amount,String phone,int from)
+	{
+		this.amount=amount;
+		this.userPhone=phone;
+		this.userName=name;
+		this.userId=from;
+	}
+
 
 	
 }

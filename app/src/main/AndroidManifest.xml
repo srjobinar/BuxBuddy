@@ -60,6 +60,10 @@
         <activity
             android:name=".PersonalFund"
             android:label="@string/title_activity_personal_fund"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".payment"
+            android:label="@string/title_activity_payment"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

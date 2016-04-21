@@ -118,7 +118,7 @@ public class Group_slide extends AppCompatActivity implements ActionBar.TabListe
                     message = "Your remaining fund of Rs."+can_leave+" will be donated equally. Are you sure?";
                 }
                 else {
-                    message = "Are You Sure";
+                    message = "Are You Sure?";
                 }
                 builder.setMessage(message).setPositiveButton("Accept",dialogClickListener)
                         .setNegativeButton("Reject", dialogClickListener).show();
@@ -130,6 +130,11 @@ public class Group_slide extends AppCompatActivity implements ActionBar.TabListe
                 prefEditor.commit();
                 Intent i = new Intent(this, LoginActivity.class);
                 startActivity(i);
+            case R.id.action_requestPayment:
+                    Intent j = new Intent(this, payment.class);
+                    j.putExtra("gid", gid);
+                    j.putExtra("uid", uid);
+                    startActivity(j);
 
             default:
                 // If we got here, the user's action was not recognized.
@@ -148,7 +153,8 @@ public class Group_slide extends AppCompatActivity implements ActionBar.TabListe
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-
+                    db.divide_fund(uid,gid,can_leave);
+                    db.removeUser(uid,gid);
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
