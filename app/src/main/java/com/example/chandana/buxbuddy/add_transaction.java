@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -65,12 +66,18 @@ public class add_transaction extends AppCompatActivity {
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         Button btn = (Button) findViewById(R.id.button2);
+        final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox2);
 
         btn.setOnClickListener(new View.OnClickListener()
 
                                {
                                    @Override
                                    public void onClick (View v){
+                                       if (checkBox.isChecked()) {
+                                           Intent i = new Intent(getApplicationContext(), Group_slide.class);
+                                           i.putExtra("uid",uid);
+                                           startActivity(i);
+                                       }
                                        amount = (EditText) findViewById(R.id.editText2);
                                        trans_name = (EditText) findViewById(R.id.editText3);
                                        amnt_per_user = (Integer.parseInt(amount.getText().toString())/(list.size()+1));

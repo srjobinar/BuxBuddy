@@ -33,12 +33,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -46,6 +56,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+
 
 
     /**
@@ -120,7 +132,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailSignInButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    attemptLogin();
+                    //attemptLogin();
+
+
+                    try {
+                        JSONObject obj = new JSONObject();
+                        obj.put("phone",mEmailView.getText().toString());
+                        obj.put("password",mPasswordView.getText().toString());
+                        obj.put("type","login");
+                        ScriptRunner run = new ScriptRunner(obj, new ScriptRunner.ScriptFinishListener() {
+                            @Override
+                            public void finish(String result, int resultCode) {
+                                if(resultCode==ScriptRunner.SUCCESS){
+                                    Log.d("tag::",result);
+//                                    SharedPreferences.Editor prefEditor = sharedPref.edit();
+//                                    prefEditor.putInt("isLogged",1);
+//                                    prefEditor.putInt("uid",userid);
+//                                    prefEditor.commit();
+                                    Intent i = new Intent(getApplicationContext(), DashboardSlide.class);
+                                    i.putExtra("uid",userid);
+                                    startActivity(i);
+                                    setContentView(R.layout.activity_dashboard);
+                                }
+                            }
+                        });
+                        run.execute();
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
             });
 

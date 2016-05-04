@@ -1,8 +1,10 @@
 package com.example.chandana.buxbuddy;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Event {
+public class Event{
 
 	
 	public int userId;
@@ -86,6 +88,4 @@ public class Event {
 		this.userId=from;
 	}
 
-
-	
 }
